@@ -1,0 +1,2 @@
+http://deusyss.developpez.com/tutoriels/RaspberryPi/PythonEtLeGpio/ 
+http://pi.gadgetoid.com/pinout/
