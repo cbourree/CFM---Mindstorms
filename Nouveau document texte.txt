@@ -1,9 +1,0 @@
-import os # On importe le module os
-
-
-i = 0
-
-print("test")
-	
-	
-os.system("pause")
