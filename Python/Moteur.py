@@ -1,22 +1,28 @@
 
 class MoteurExistError(Exception):
+    #Un moteur est déjà initialisé sur ce port
     pass
 
 class MoteurPortError(Exception):
+    #Le port demandé n'existe pas
     pass
 
 class MoteurVitesseError(Exception):
+    #La vitesse n'est pas comprises entre -100 et 100
     pass
  
 class Moteur:
  
-    _MOTEURS = {}
- 
+    _MOTEURS = {} #Liste des ports utilisé
+    _PORTS = "ABC" #Liste des ports disponibles
+    
     def __new__(cls, port, vitesse = 0):
         if port in cls._MOTEURS:
             raise MoteurExistError
-        if port not in "ABC":
+        if port not in Moteur._PORTS:
             raise MoteurPortError
+        if vitesse < -100 or vitesse > 100:
+            raise MoteurVitesseError
         self = object.__new__(cls)
         self._port = port
         self._vitesse = vitesse
@@ -31,13 +37,16 @@ class Moteur:
 
     def setPort(self, port):
         if port in self._MOTEURS:
-            return -1
-        else:
-            del Moteur._MOTEURS[self._port]
-            self._port = port
-            self._MOTEURS[port] = self
+            raise MoteurExistError
+        if port not in Moteur._PORTS:
+            raise MoteurPortError
+        del Moteur._MOTEURS[self._port]
+        self._port = port
+        self._MOTEURS[port] = self
 
     def setVitesse(self, vitesse):
+        if vitesse < -100 or vitesse > 100:
+            raise MoteurVitesseError
         self._vitesse = vitesse
             
     def __repr__(self):
