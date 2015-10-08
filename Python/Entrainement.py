@@ -1,3 +1,4 @@
+"""
 import RPi.GPIO as GPIO
 
 GPIO.setup(12, GPIO.IN)                    # broche 12 est une entree numerique
@@ -10,3 +11,6 @@ GPIO.output(12, GPIO.LOW) #Passage de la sortie à l'état bas
 
 
 GPIO.cleanup()#Pour restaurer les ports comme au début du programme
+"""
+
+
