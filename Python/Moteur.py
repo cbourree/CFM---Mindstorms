@@ -1,14 +1,23 @@
+"""
+    Class Moteur
+Permet le controle d'un moteur LEGO NXT
 
-class MoteurExistError(Exception):
+"""
+
+class MoteurExistErreur(Exception):
     #Un moteur est déjà initialisé sur ce port
     pass
 
-class MoteurPortError(Exception):
+class MoteurPortErreur(Exception):
     #Le port demandé n'existe pas
     pass
 
-class MoteurVitesseError(Exception):
+class MoteurVitesseErreur(Exception):
     #La vitesse n'est pas comprises entre -100 et 100
+    pass
+
+class MoteurTempsErreur(Exception):
+    #Le temps n'est pas possible
     pass
  
 class Moteur:
@@ -18,9 +27,9 @@ class Moteur:
     
     def __new__(cls, port, vitesse = 0):
         if port in cls._MOTEURS:
-            raise MoteurExistError
+            raise MoteurExistErreur
         if port not in Moteur._PORTS:
-            raise MoteurPortError
+            raise MoteurPortErreur
         if vitesse < -100 or vitesse > 100:
             raise MoteurVitesseError
         self = object.__new__(cls)
@@ -37,18 +46,31 @@ class Moteur:
 
     def setPort(self, port):
         if port in self._MOTEURS:
-            raise MoteurExistError
+            raise MoteurExistErreur
         if port not in Moteur._PORTS:
-            raise MoteurPortError
+            raise MoteurPortErreur
         del Moteur._MOTEURS[self._port]
         self._port = port
         self._MOTEURS[port] = self
 
     def setVitesse(self, vitesse):
         if vitesse < -100 or vitesse > 100:
-            raise MoteurVitesseError
+            raise MoteurVitesseErreur
         self._vitesse = vitesse
-            
+
+
+    def go(self, temps, vitesse = 'A'):
+        #le temps en ms
+        if vitesse != 'A':
+            self.setVitesse(vitesse);
+        try:
+            int(temps)
+            if temps <= 0:
+                raise MoteurTempsErreur
+        except:
+            raise MoteurTempsErreur
+        
+        
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
         return "Moteur sur le port {}\n\tVitesse : {}" . format(self._port, self._vitesse)
