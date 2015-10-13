@@ -1,12 +1,6 @@
-#!/usr/bin/python
 #-*- coding: utf-8 -*-
 import time
 import RPi.GPIO as GPIO
-"""
-    Class Moteur
-Permet le controle d'un moteur LEGO NXT
-
-"""
 
 class MoteurExistErreur(Exception):
     #Un moteur est déjà initialisé sur ce port

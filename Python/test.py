@@ -1,4 +1,4 @@
 import Moteur
 
-A = Moteur('A')
+A = Moteur.Moteur('A')
 A.getVitesse()
