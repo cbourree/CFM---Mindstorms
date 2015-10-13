@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#-*- coding: utf-8 -*-
 import Moteurs
 
 A = Moteurs.Moteur('A', 50)
