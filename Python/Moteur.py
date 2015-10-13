@@ -1,3 +1,6 @@
+#!/usr/bin/python
+import time
+import RPi.GPIO as GPIO
 """
     Class Moteur
 Permet le controle d'un moteur LEGO NXT
@@ -57,7 +60,7 @@ class Moteur:
         if vitesse < -100 or vitesse > 100:
             raise MoteurVitesseErreur
         self._vitesse = vitesse
-
+        #self._pwm1.ChangeDutyCycle(nouveau_rapport_cyclique)
 
     def go(self, temps, vitesse = 'A'):
         #le temps en ms
@@ -69,6 +72,10 @@ class Moteur:
                 raise MoteurTempsErreur
         except:
             raise MoteurTempsErreur
+        self._pwm1 = GPIO.PWM(channel, frequence)
+        self._pwm1.start(rapport_cyclique) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+        time.sleep(5) #On attend 5 sec
+        self.stop()
         
         
     def __repr__(self):
