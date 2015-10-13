@@ -1,4 +1,4 @@
-import Moteur
+import Moteurs
 
-A = Moteur.Moteur('A')
-A.getVitesse()
+A = Moteurs.Moteur('A', 50)
+print(A.getVitesse())
