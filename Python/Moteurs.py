@@ -1,5 +1,9 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
+"""
+Port A : pin 33, 35
+
+"""
 import time
 import RPi.GPIO as GPIO
 
@@ -51,7 +55,7 @@ class Moteur:
         del Moteur._MOTEURS[self._port]
         self._port = port
         self._MOTEURS[port] = self
-
+        
     def setVitesse(self, vitesse):
         if vitesse < -100 or vitesse > 100:
             raise MoteurVitesseErreur
@@ -68,8 +72,17 @@ class Moteur:
                 raise MoteurTempsErreur
         except:
             raise MoteurTempsErreur
-        self._pwm1 = GPIO.PWM(channel, frequence)
-        self._pwm1.start(rapport_cyclique) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+        if getPort() == 'A':
+            self._pwm1 = GPIO.PWM(33, frequence)
+            self._pwm2 = GPIO.PWM(35, frequence)
+        elif getPort() == 'B':
+            self._pwm1 = GPIO.PWM(33, frequence)
+            self._pwm2 = GPIO.PWM(35, frequence)
+        else:
+            self._pwm1 = GPIO.PWM(33, frequence)
+            self._pwm2 = GPIO.PWM(35, frequence)
+        #self._pwm1.start(rapport_cyclique) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+        #self._pwm2.start(rapport_cyclique) #ici, rapport_cyclique vaut entre 0.0 et 100.0
         time.sleep(5) #On attend 5 sec
         self.stop()
         
