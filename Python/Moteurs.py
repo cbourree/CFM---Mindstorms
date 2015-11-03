@@ -44,7 +44,7 @@ class Moteur:
         elif port == 'B':
             GPIO.setup(37, GPIO.OUT)
             GPIO.setup(40, GPIO.OUT)
-        else
+        else:
             GPIO.setup(38, GPIO.OUT)
             GPIO.setup(36, GPIO.OUT)
         return self
