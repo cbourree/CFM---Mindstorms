@@ -38,6 +38,15 @@ class Moteur:
         self._port = port
         self._consigne = consigne
         cls._MOTEURS[port] = self
+        if port == 'A':
+            GPIO.setup(33, GPIO.OUT)
+            GPIO.setup(35, GPIO.OUT)
+        elif port == 'B':
+            GPIO.setup(37, GPIO.OUT)
+            GPIO.setup(40, GPIO.OUT)
+        else
+            GPIO.setup(38, GPIO.OUT)
+            GPIO.setup(36, GPIO.OUT)
         return self
 
     def getPort(self):
@@ -72,8 +81,6 @@ class Moteur:
         except:
             raise MoteurTempsErreur
         if self.getPort() == 'A':
-            GPIO.setup(33, GPIO.OUT)
-            GPIO.setup(35, GPIO.OUT)
             self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
             self._pwm2 = GPIO.PWM(35, 2000)
         elif self.getPort() == 'B':
