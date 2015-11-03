@@ -74,7 +74,7 @@ class Moteur:
         if self.getPort() == 'A':
             GPIO.setup(33, GPIO.HARD_PWM)
             GPIO.setup(35, GPIO.HARD_PWM)
-	    self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
+            self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
             self._pwm2 = GPIO.PWM(35, 2000)
         elif self.getPort() == 'B':
             self._pwm1 = GPIO.PWM(37, 2000)
