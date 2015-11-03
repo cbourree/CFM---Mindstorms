@@ -1,12 +1,10 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-"""
-Port A : pin 33, 35
-Port B : pin 37, 40
-Port C : pin 38, 36
-"""
+
 import time
 import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BOARD)
 
 class MoteurExistErreur(Exception):
     #Un moteur est déjà initialisé sur ce port
@@ -29,12 +27,12 @@ class Moteur:
     _MOTEURS = {} #Liste des ports utilisé
     _PORTS = "ABC" #Liste des ports disponibles
     
-    def __new__(cls, port, vitesse = 0):
+    def __new__(cls, port, consigne = 0):
         if port in cls._MOTEURS:
             raise MoteurExistErreur
         if port not in Moteur._PORTS:
             raise MoteurPortErreur
-        if vitesse < -100 or vitesse > 100:
+        if consigne < -100 or consigne > 100:
             raise MoteurConsigneError
         self = object.__new__(cls)
         self._port = port
@@ -73,20 +71,22 @@ class Moteur:
                 raise MoteurTempsErreur
         except:
             raise MoteurTempsErreur
-        if getPort() == 'A':
-            self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
+        if self.getPort() == 'A':
+		GPIO.setup(33, GPIO.HARD_PWM)
+		GPIO.setup(35, GPIO.HARD_PWM)
+	    self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
             self._pwm2 = GPIO.PWM(35, 2000)
-        elif getPort() == 'B':
+        elif self.getPort() == 'B':
             self._pwm1 = GPIO.PWM(37, 2000)
             self._pwm2 = GPIO.PWM(40, 2000)
         else:
             self._pwm1 = GPIO.PWM(38, 2000)
             self._pwm2 = GPIO.PWM(36, 2000)
-        if getConsigne() > 0:
+        if self.getConsigne() > 0:
             self._pwm1.start(100) #100, état haut
-            self._pwm2.start(100 - getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
-        elif getConsigne() < 0:
-            self._pwm1.start(100 + getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+            self._pwm2.start(100 - self.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+        elif self.getConsigne() < 0:
+            self._pwm1.start(100 + self.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
             self._pwm2.start(100) #100, état haut
         else:
             self._pwm1.start(100)
