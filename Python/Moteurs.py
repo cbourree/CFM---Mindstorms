@@ -2,7 +2,8 @@
 #-*- coding: utf-8 -*-
 """
 Port A : pin 33, 35
-
+Port B : pin 37, 40
+Port C : pin 38, 36
 """
 import time
 import RPi.GPIO as GPIO
@@ -15,8 +16,8 @@ class MoteurPortErreur(Exception):
     #Le port demandé n'existe pas
     pass
 
-class MoteurVitesseErreur(Exception):
-    #La vitesse n'est pas comprises entre -100 et 100
+class MoteurConsigneErreur(Exception):
+    #La consigne n'est pas comprises entre -100 et 100
     pass
 
 class MoteurTempsErreur(Exception):
@@ -34,18 +35,18 @@ class Moteur:
         if port not in Moteur._PORTS:
             raise MoteurPortErreur
         if vitesse < -100 or vitesse > 100:
-            raise MoteurVitesseError
+            raise MoteurConsigneError
         self = object.__new__(cls)
         self._port = port
-        self._vitesse = vitesse
+        self._consigne = consigne
         cls._MOTEURS[port] = self
         return self
 
     def getPort(self):
         return self._port
     
-    def getVitesse(self):
-        return self._vitesse
+    def getConsigne(self):
+        return self._consigne
 
     def setPort(self, port):
         if port in self._MOTEURS:
@@ -56,16 +57,16 @@ class Moteur:
         self._port = port
         self._MOTEURS[port] = self
         
-    def setVitesse(self, vitesse):
-        if vitesse < -100 or vitesse > 100:
-            raise MoteurVitesseErreur
-        self._vitesse = vitesse
+    def setConsigne(self, consigne):
+        if consigne < -100 or consigne > 100:
+            raise MoteurConsigneErreur
+        self._consigne = consigne
         #self._pwm1.ChangeDutyCycle(nouveau_rapport_cyclique)
 
-    def go(self, temps, vitesse = 'A'):
+    def go(self, temps, consigne = 'A'):
         #le temps en ms
-        if vitesse != 'A':
-            self.setVitesse(vitesse);
+        if consigne != 'A':
+            self.setConsigne(consigne);
         try:
             int(temps)
             if temps <= 0:
@@ -73,19 +74,29 @@ class Moteur:
         except:
             raise MoteurTempsErreur
         if getPort() == 'A':
-            self._pwm1 = GPIO.PWM(33, frequence)
-            self._pwm2 = GPIO.PWM(35, frequence)
+            self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
+            self._pwm2 = GPIO.PWM(35, 2000)
         elif getPort() == 'B':
-            self._pwm1 = GPIO.PWM(33, frequence)
-            self._pwm2 = GPIO.PWM(35, frequence)
+            self._pwm1 = GPIO.PWM(37, 2000)
+            self._pwm2 = GPIO.PWM(40, 2000)
         else:
-            self._pwm1 = GPIO.PWM(33, frequence)
-            self._pwm2 = GPIO.PWM(35, frequence)
-        #self._pwm1.start(rapport_cyclique) #ici, rapport_cyclique vaut entre 0.0 et 100.0
-        #self._pwm2.start(rapport_cyclique) #ici, rapport_cyclique vaut entre 0.0 et 100.0
-        time.sleep(5) #On attend 5 sec
+            self._pwm1 = GPIO.PWM(38, 2000)
+            self._pwm2 = GPIO.PWM(36, 2000)
+        if getConsigne() > 0:
+            self._pwm1.start(100) #100, état haut
+            self._pwm2.start(100 - getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+        elif getConsigne() < 0:
+            self._pwm1.start(100 + getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+            self._pwm2.start(100) #100, état haut
+        else:
+            self._pwm1.start(100)
+            self._pwm2.start(100)
+        time.sleep(temps * 1000) #On attend 
         self.stop()
         
+    def stop(self):
+        self._pwm1.stop()
+        self._pwm2.stop()
         
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
