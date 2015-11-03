@@ -72,8 +72,8 @@ class Moteur:
         except:
             raise MoteurTempsErreur
         if self.getPort() == 'A':
-            GPIO.setup(33, GPIO.HARD_PWM)
-            GPIO.setup(35, GPIO.HARD_PWM)
+            GPIO.setup(33, GPIO.OUT)
+            GPIO.setup(35, GPIO.OUT)
             self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
             self._pwm2 = GPIO.PWM(35, 2000)
         elif self.getPort() == 'B':
@@ -91,7 +91,7 @@ class Moteur:
         else:
             self._pwm1.start(100)
             self._pwm2.start(100)
-        time.sleep(temps * 1000) #On attend 
+        time.sleep(temps / 1000) #On attend 
         self.stop()
         
     def stop(self):
