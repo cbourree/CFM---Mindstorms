@@ -70,13 +70,13 @@ class Moteur:
         self._consigne = consigne
         #self._pwm1.ChangeDutyCycle(nouveau_rapport_cyclique)
 
-    def go(self, temps, consigne = 'A'):
+    def go(self, tempsMS, consigne = 'A'):
         #le temps en ms
         if consigne != 'A':
             self.setConsigne(consigne);
         try:
-            int(temps)
-            if temps <= 0:
+            int(tempsMS)
+            if tempsMS <= 0:
                 raise MoteurTempsErreur
         except:
             raise MoteurTempsErreur
@@ -98,7 +98,7 @@ class Moteur:
         else:
             self._pwm1.start(100)
             self._pwm2.start(100)
-        time.sleep(temps / 1000) #On attend 
+        time.sleep(tempsMS / 1000) #On attend 
         self.stop()
         
     def stop(self):
@@ -107,7 +107,7 @@ class Moteur:
         
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
-        return "Moteur sur le port {}\n\tVitesse : {}" . format(self._port, self._vitesse)
+        return "Moteur sur le port {}\n\tConsigne : {}" . format(self._port, self._consigne)
     
     def __del__(self):
         del Moteur._MOTEURS[self._port]
