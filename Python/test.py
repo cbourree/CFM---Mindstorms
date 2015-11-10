@@ -3,8 +3,8 @@
 
 from Moteurs import Moteur
 
-A = Moteur('A', -50)
-A.go(5000)
+A = Moteur('A', -80)
+A.go(50000)
 
 B = Moteur('B')
 B.go(5000, 50)

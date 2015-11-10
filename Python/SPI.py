@@ -20,10 +20,11 @@ def lire_analog(puce_spi = 0, entree_analog = 1):
     msb = rd_octets[0] 
     lsb = rd_octets[1] 
     value = (msb << 8) + lsb 
-    calcul = 2 * (value * 3.3) / 1024.0 
+    calcul = 2 * (value * 5) / 1024.0 
     return calcul 
 
-print(lire_analog())
+while 1:
+    print(lire_analog(0, 0))
 
 if __name__ == '__main__': 
     print(lire_analog())
