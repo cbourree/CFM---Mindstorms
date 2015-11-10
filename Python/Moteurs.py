@@ -3,6 +3,7 @@
 
 import time
 import RPi.GPIO as GPIO
+from threading import Thread
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -26,8 +27,10 @@ class Moteur:
  
     _MOTEURS = {} #Liste des ports utilisé
     _PORTS = "ABC" #Liste des ports disponibles
+    _isRuning = False
     
     def __new__(cls, port, consigne = 0):
+        Thread.__new__(self)
         if port in cls._MOTEURS:
             raise MoteurExistErreur
         if port not in Moteur._PORTS:
@@ -41,12 +44,18 @@ class Moteur:
         if port == 'A':
             GPIO.setup(33, GPIO.OUT)
             GPIO.setup(35, GPIO.OUT)
+            self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
+            self._pwm2 = GPIO.PWM(35, 2000)
         elif port == 'B':
             GPIO.setup(37, GPIO.OUT)
             GPIO.setup(40, GPIO.OUT)
+            self._pwm1 = GPIO.PWM(37, 2000)
+            self._pwm2 = GPIO.PWM(40, 2000)
         else:
             GPIO.setup(38, GPIO.OUT)
             GPIO.setup(36, GPIO.OUT)
+            self._pwm1 = GPIO.PWM(38, 2000)
+            self._pwm2 = GPIO.PWM(36, 2000)
         return self
 
     def getPort(self):
@@ -54,6 +63,9 @@ class Moteur:
     
     def getConsigne(self):
         return self._consigne
+
+    def isRuning(self):
+        return self._isRuning
 
     def setPort(self, port):
         if port in self._MOTEURS:
@@ -68,7 +80,16 @@ class Moteur:
         if consigne < -100 or consigne > 100:
             raise MoteurConsigneErreur
         self._consigne = consigne
-        #self._pwm1.ChangeDutyCycle(nouveau_rapport_cyclique)
+        if self.isRuning():
+            if consigne > 0:
+                self._pwm1.ChangeDutyCycle(100) #100, état haut
+                self._pwm2.ChangeDutyCycle(100 - consigne) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+            elif consigne < 0:
+                self._pwm1.ChangeDutyCycle(100 + consigne) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+                self._pwm2.ChangeDutyCycle(100) #100, état haut
+            else:
+                self._pwm1.ChangeDutyCycle(100)
+                self._pwm2.ChangeDutyCycle(100)
 
     def go(self, tempsMS, consigne = 'A'):
         #le temps en ms
@@ -80,15 +101,9 @@ class Moteur:
                 raise MoteurTempsErreur
         except:
             raise MoteurTempsErreur
-        if self.getPort() == 'A':
-            self._pwm1 = GPIO.PWM(33, 2000) #Fréquence 2000
-            self._pwm2 = GPIO.PWM(35, 2000)
-        elif self.getPort() == 'B':
-            self._pwm1 = GPIO.PWM(37, 2000)
-            self._pwm2 = GPIO.PWM(40, 2000)
-        else:
-            self._pwm1 = GPIO.PWM(38, 2000)
-            self._pwm2 = GPIO.PWM(36, 2000)
+
+        self_isRuning = True
+        
         if self.getConsigne() > 0:
             self._pwm1.start(100) #100, état haut
             self._pwm2.start(100 - self.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
@@ -98,8 +113,9 @@ class Moteur:
         else:
             self._pwm1.start(100)
             self._pwm2.start(100)
-        time.sleep(tempsMS / 1000) #On attend 
+        time.sleep(tempsMS / 1000) #On attend
         self.stop()
+        self_isRuning = False
         
     def stop(self):
         self._pwm1.stop()

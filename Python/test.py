@@ -1,7 +1,12 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
-import Moteurs
+from Moteurs import Moteur
 
-A = Moteurs.Moteur('A', 50)
+A = Moteur('A')
 A.go(50000, 80)
+
+B = Moteur('B', -50)
+B.go(50000)
+
+GPIO.cleanup()
