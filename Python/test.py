@@ -3,10 +3,10 @@
 
 from Moteurs import Moteur
 
-A = Moteur('A')
-A.go(50000, 80)
+A = Moteur('A', -50)
+A.go(5000)
 
-B = Moteur('B', -50)
-B.go(50000)
+B = Moteur('B')
+B.go(5000, 50)
 
 GPIO.cleanup()

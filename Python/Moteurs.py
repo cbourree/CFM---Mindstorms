@@ -23,14 +23,13 @@ class MoteurTempsErreur(Exception):
     #Le temps n'est pas possible
     pass
  
-class Moteur:
+class Moteur():
  
     _MOTEURS = {} #Liste des ports utilisé
     _PORTS = "ABC" #Liste des ports disponibles
     _isRuning = False
     
     def __new__(cls, port, consigne = 0):
-        Thread.__new__(self)
         if port in cls._MOTEURS:
             raise MoteurExistErreur
         if port not in Moteur._PORTS:
@@ -94,7 +93,7 @@ class Moteur:
     def go(self, tempsMS, consigne = 'A'):
         #le temps en ms
         if consigne != 'A':
-            self.setConsigne(consigne);
+            self.setConsigne(consigne)
         try:
             int(tempsMS)
             if tempsMS <= 0:
@@ -113,10 +112,13 @@ class Moteur:
         else:
             self._pwm1.start(100)
             self._pwm2.start(100)
-        time.sleep(tempsMS / 1000) #On attend
-        self.stop()
+        self.test(tempsMS)
         self_isRuning = False
-        
+    
+    def test(self, tempsMS):
+        time.sleep(tempsMS / 1000)
+        self.stop()
+    
     def stop(self):
         self._pwm1.stop()
         self._pwm2.stop()
