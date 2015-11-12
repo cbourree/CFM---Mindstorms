@@ -3,9 +3,6 @@
 
 import time
 import RPi.GPIO as GPIO
-from threading import Thread
-
-GPIO.setmode(GPIO.BOARD)
 
 class MoteurExistErreur(Exception):
     #Un moteur est déjà initialisé sur ce port
@@ -30,7 +27,7 @@ class Moteur():
     _isRuning = False
     
     def __new__(cls, port, consigne = 0):
-        if port in cls._MOTEURS:
+        if port in cls._MOTEURS: #Si le port est déjà pris
             raise MoteurExistErreur
         if port not in Moteur._PORTS:
             raise MoteurPortErreur
@@ -122,7 +119,8 @@ class Moteur():
     def stop(self):
         self._pwm1.stop()
         self._pwm2.stop()
-        
+
+    
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
         return "Moteur sur le port {}\n\tConsigne : {}" . format(self._port, self._consigne)

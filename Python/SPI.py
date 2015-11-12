@@ -1,17 +1,22 @@
 from __future__ import division 
 import spidev 
- 
-def lire_analog(puce_spi = 0, entree_analog = 1): 
-    liaison = spidev.SpiDev(0, puce_spi) 
+
+
+class EntreeExistErreur(Exception):
+    #L'entrée n'existe pas
+    pass
+
+def lire_analog(entree_analog = 0): 
+    liaison = spidev.SpiDev(0, 0) #Créée liaison SPI sur le port 0, adresse 0
     liaison.max_speed_hz = 300000 # en Hertz 
 
     # Initialisation des parametres de lecture
-    # (cf datasheet pour les curieux) 
-    if entree_analog == 0: 
-        value = 128 
-    else: 
-        value = 160 
-    to_send = [value, 0] 
+    if entree_analog >= 0 && entree_analog <= 7: #Choie de la voie a convertir
+        msb_addr_voie = 128 + 16 * entree_analog # msb_addr = (entree_analog + 8) << 4
+    else:
+        raise EntreeExistErreur
+    to_send = [msb_addr_voie, 0]
+    #to_send = [msb_addr_voie, ] A tester
 
     # Lecture 
     rd_octets = liaison.xfer2(to_send) 
@@ -19,12 +24,11 @@ def lire_analog(puce_spi = 0, entree_analog = 1):
     # La reponse arrive sur deux octets 
     msb = rd_octets[0] 
     lsb = rd_octets[1] 
-    value = (msb << 8) + lsb 
-    calcul = 2 * (value * 5) / 1024.0 
+    value = (msb << 8) + lsb # inclu dans  [0, 1024]
+    
+    calcul = 2 * (value * 5) / 1024.0
     return calcul 
 
 while 1:
     print(lire_analog(0, 0))
 
-if __name__ == '__main__': 
-    print(lire_analog())
