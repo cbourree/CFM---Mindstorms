@@ -1,2 +1,8 @@
-http://deusyss.developpez.com/tutoriels/RaspberryPi/PythonEtLeGpio/ 
+Tuto RPI bases
+http://deusyss.developpez.com/tutoriels/RaspberryPi/PythonEtLeGpio/
+PIN détails android
 http://pi.gadgetoid.com/pinout/
+Crack Proteus
+https://onedrive.live.com/redir?resid=4BAEFF1EB1050912!795&authkey=!ADHB5VK_fEpsoBE&ithint=file%2crar
+Tuto VNC
+http://vdmlab.fr/tutoriel-raspberry-pi-controler-son-raspberry-pi-a-distance-avec-vnc/
