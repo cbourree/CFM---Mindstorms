@@ -49,7 +49,6 @@ class Moteur():
  
     _MOTEURS = {} #Liste des ports utilisé
     _PORTS = "ABC" #Liste des ports disponibles
-    _isRuning = False
     
     def __new__(cls, port, consigne = 0):
         if port in cls._MOTEURS: #Si le port est déjà pris
@@ -60,6 +59,7 @@ class Moteur():
             raise MoteurConsigneError
         self = object.__new__(cls)
         self._port = port
+        self._isRuning = False
         self._consigne = consigne
         cls._MOTEURS[port] = self
         if port == 'A':
