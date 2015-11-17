@@ -6,13 +6,13 @@ class EntreeExistErreur(Exception):
     #L'entrée n'existe pas
     pass
 
-def lire_analog(entree_analog = 0): 
+def lire_analog(entree_analog = 0):
     liaison = spidev.SpiDev(0, 0) #Créée liaison SPI sur le port 0, adresse 0
     liaison.max_speed_hz = 300000 # en Hertz 
 
     # Initialisation des parametres de lecture
-    if entree_analog >= 0 && entree_analog <= 7: #Choie de la voie a convertir
-        msb_addr_voie = 128 + 16 * entree_analog # msb_addr = (entree_analog + 8) << 4
+    if entree_analog >= 0 and entree_analog <= 7: #Choie de la voie a convertir
+        msb_addr_voie = 128 + 8 * entree_analog # msb_addr = (entree_analog + 8) << 4
     else:
         raise EntreeExistErreur
     to_send = [msb_addr_voie, 0]
@@ -30,5 +30,5 @@ def lire_analog(entree_analog = 0):
     return calcul 
 
 while 1:
-    print(lire_analog(0, 0))
+    print(lire_analog(7))
 
