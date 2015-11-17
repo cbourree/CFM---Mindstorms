@@ -23,24 +23,26 @@ class MoteurTempsErreur(Exception):
 
 class ThreadGo(Thread): #Go non bloquant
 
-    def __init__(self):
+    def __init__(self, mo, tempsMS):
         Thread.__init__(self)
+        self._mo = mo 
+        self._tempsMS = tempsMS
 
-    def run(mo):
-        mo._isRuning = True
+    def run(self):
+        self._mo._isRuning = True
         
-        if mo.getConsigne() > 0:
-            mo._pwm1.start(100) #100, état haut
-            mo._pwm2.start(100 - mo.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
-        elif mo.getConsigne() < 0:
-            mo._pwm1.start(100 + mo.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
-            mo._pwm2.start(100) #100, état haut
+        if self._mo.getConsigne() > 0:
+            self._mo._pwm1.start(100) #100, état haut
+            self._mo._pwm2.start(100 - self._mo.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+        elif self._mo.getConsigne() < 0:
+            self._mo._pwm1.start(100 + self._mo.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
+            self._mo._pwm2.start(100) #100, état haut
         else:
-            mo._pwm1.start(100)
-            mo._pwm2.start(100)
+            self._mo._pwm1.start(100)
+            self._mo._pwm2.start(100)
         
-        time.sleep(tempsMS / 1000)
-        mo.stop()
+        time.sleep(self._tempsMS / 1000)
+        self._mo.stop()
     
 class Moteur():
  
@@ -65,13 +67,13 @@ class Moteur():
         elif port == 'B':
             pinA = 37
             pinB = 40
-        else
+        else:
             pinA = 38
             pinB = 36
         GPIO.setup(pinA, GPIO.OUT)
         GPIO.setup(pinB, GPIO.OUT)
-        self._pwm1 = GPIO.PWM(pinA, 2000)
-        self._pwm2 = GPIO.PWM(pinB, 2000)
+        self._pwm1 = GPIO.PWM(pinA, 1000)
+        self._pwm2 = GPIO.PWM(pinB, 1000)
         return self
 
     def getPort(self):
@@ -117,10 +119,10 @@ class Moteur():
                 raise MoteurTempsErreur
         except:
             raise MoteurTempsErreur
-        thread = ThreadGo()
+        thread = ThreadGo(self, tempsMS)
         thread.start()
 
-    def run(self):
+    def runnonbloquant(self):
         if consigne != 'A':
             self.setConsigne(consigne)
         self._isRuning = True
@@ -143,7 +145,7 @@ class Moteur():
     def stop(self):
         self._pwm1.stop()
         self._pwm2.stop()
-        mo._isRuning = False
+        self._isRuning = False
 
     
     def __repr__(self):
