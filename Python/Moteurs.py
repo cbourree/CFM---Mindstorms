@@ -124,7 +124,7 @@ class Moteur():
         thread = ThreadGo(self, tempsMS)
         thread.start()
 
-    def runnonbloquant(self):
+    def runInfini(self, consigne):
         if consigne != 'A':
             self.setConsigne(consigne)
         self._isRuning = True
