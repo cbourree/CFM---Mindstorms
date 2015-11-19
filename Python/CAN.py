@@ -6,7 +6,7 @@ class EntreeExistErreur(Exception):
     #L'entrée n'existe pas
     pass
 
-def lire_analog(entree_analog = 0):
+def getTension(entree_analog = 0):
     liaison = spidev.SpiDev(0, 0) #Créée liaison SPI sur le port 0, adresse 0
     liaison.max_speed_hz = 300000 # en Hertz 
 
@@ -28,7 +28,4 @@ def lire_analog(entree_analog = 0):
     
     calcul = 2 * (value * 5) / 1024.0
     return calcul 
-
-while 1:
-    print(lire_analog(7))
 

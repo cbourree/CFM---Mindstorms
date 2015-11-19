@@ -30,9 +30,7 @@ class ThreadGo(Thread): #Go non bloquant
 
     def run(self):
         self._mo._isRuning = True
-        print("Test : " + str(self._mo.getConsigne()))
         if self._mo.getConsigne() > 0:
-            print("Je lance la PWM sur le port " + self._mo.getPort())
             self._mo._pwm1.start(100) #100, état haut
             self._mo._pwm2.start(100 - self._mo.getConsigne()) #ici, rapport_cyclique vaut entre 0.0 et 100.0
         elif self._mo.getConsigne() < 0:
@@ -71,7 +69,6 @@ class Moteur():
         else:
             pinA = 38
             pinB = 36
-        print(str(pinA) + ", " + str(pinB))
         GPIO.setup(pinA, GPIO.OUT)
         GPIO.setup(pinB, GPIO.OUT)
         self._pwm1 = GPIO.PWM(pinA, 1000)
