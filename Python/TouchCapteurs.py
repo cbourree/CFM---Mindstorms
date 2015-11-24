@@ -17,7 +17,7 @@ class TouchCapteur():
             raise CapteurPortErreur
         self._port = port
         if port == '1':
-            self._entree = 4
+            self._entree = 0
         elif port == '2':
             self._entree = 1
         elif port == '3':

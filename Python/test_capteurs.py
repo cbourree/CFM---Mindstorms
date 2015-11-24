@@ -12,4 +12,4 @@ while 1:
         print("Le capteur est appuyez")
     else:
         print("Le capteur est relaché")
-    time.sleep(1)
+    time.sleep(0.1)
