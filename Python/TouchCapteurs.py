@@ -36,9 +36,9 @@ class TouchCapteur():
     def isPressed(self):
         tension = getTension(self._entree)
         if tension < 2:
-            return False
-        else:
             return True
+        else:
+            return False
     
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
