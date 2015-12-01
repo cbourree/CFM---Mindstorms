@@ -23,8 +23,8 @@ class SoundCapteur():
             self._digi2 = 16
         else:
             self._voie_can = 1
-            self._cmd1 = 18
-            self._cmd2 = 22
+            self._digi1 = 18
+            self._digi2 = 22
         GPIO.setup(self._digi1, GPIO.OUT)
         GPIO.setup(self._digi2, GPIO.OUT)
 
@@ -40,19 +40,9 @@ class SoundCapteur():
         GPIO.output(self._digi1, GPIO.HIGH)
         GPIO.output(self._digi2, GPIO.HIGH)
         tension = getTension(self._voie_can)
-        GPIO.output(self._cmd, GPIO.LOW)
-        return tension
-
-    def BlancOuNoir(self):
-        #1 Blanc, 2 Noir
-        GPIO.output(self._cmd, GPIO.HIGH)
-        time.sleep(0.2)
-        tension = getTension(self._voie_can)
-        GPIO.output(self._cmd, GPIO.LOW)
-        if (tension < 2.6):
-            return 1
-        else:
-            return 2
+        GPIO.output(self._digi1, GPIO.LOW)
+        GPIO.output(self._digi2, GPIO.LOW)
+        return (5 - tension) * 20
     
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur

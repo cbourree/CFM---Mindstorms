@@ -11,7 +11,7 @@ SC = SoundCapteur('1')
 
 while 1:
     print("\nTension du son :")
-    print(SC.getSound())
+    print(SC.getSon())
     time.sleep(1)
 
 GPIO.cleanup()
