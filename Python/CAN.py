@@ -3,7 +3,7 @@
 
 from __future__ import division 
 import spidev 
-
+import time
 
 class EntreeExistErreur(Exception):
     #L'entrée n'existe pas
