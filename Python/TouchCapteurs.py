@@ -42,7 +42,7 @@ class TouchCapteur():
             return False
 
     def waitIsPressed(self):
-        while (!self.isPressed()):
+        while (self.isPressed() != 1):
             time.sleep(0.1)
     
     def __repr__(self):
