@@ -3,6 +3,7 @@
 
 from CAN import getTension
 import RPi.GPIO as GPIO
+import time
 
 class CapteurPortErreur(Exception):
     #Le port demandé n'existe pas
@@ -17,13 +18,13 @@ class TouchCapteur():
             raise CapteurPortErreur
         self._port = port
         if port == '1':
-            self._entree = 0
+            self._voie_can = 0
         elif port == '2':
-            self._entree = 1
+            self._voie_can = 1
         elif port == '3':
-            self._entree = 2
+            self._voie_can = 2
         else:
-            self._entree = 3
+            self._voie_can = 3
 
     def getPort(self):
         return self._port
@@ -34,11 +35,15 @@ class TouchCapteur():
         self._port = port
 
     def isPressed(self):
-        tension = getTension(self._entree)
+        tension = getTension(self._voie_can)
         if tension < 2:
             return True
         else:
             return False
+
+    def waitIsPressed(self):
+        while (!self.isPressed()):
+            time.sleep(0.1)
     
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
