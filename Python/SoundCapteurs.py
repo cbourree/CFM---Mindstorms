@@ -37,6 +37,7 @@ class SoundCapteur():
         self._port = port
 
     def getSon(self):
+        #return en % la puissance sonore reçue par le capteur
         GPIO.output(self._digi1, GPIO.HIGH)
         GPIO.output(self._digi2, GPIO.HIGH)
         tension = getTension(self._voie_can)
@@ -46,5 +47,5 @@ class SoundCapteur():
     
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
-        return "Capteur sur le port {}\nLuminosité ? {}\t" . format(self._port, self.isPressed())
+        return "Capteur sur le port {}\nSon : {}\t" . format(self._port, self.getSon())
 

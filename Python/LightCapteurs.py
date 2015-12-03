@@ -24,6 +24,7 @@ class LightCapteur():
             self._voie_can = 1
             self._cmd = 18
         GPIO.setup(self._cmd, GPIO.OUT)
+        self._valeur_limite = 2.6
 
     def getPort(self):
         return self._port
@@ -34,6 +35,7 @@ class LightCapteur():
         self._port = port
 
     def getLuminosite(self):
+        #return la tension mesuré en sortie du capteur
         GPIO.output(self._cmd, GPIO.HIGH)
         time.sleep(0.2)
         tension = getTension(self._voie_can)
@@ -41,15 +43,22 @@ class LightCapteur():
         return tension
 
     def BlancOuNoir(self):
-        #1 Blanc, 2 Noir
+        # return 1 si Blanc, 2 si Noir
         GPIO.output(self._cmd, GPIO.HIGH)
         time.sleep(0.2)
         tension = getTension(self._voie_can)
         GPIO.output(self._cmd, GPIO.LOW)
-        if (tension < 2.6):
+        if (tension < self._valeur_limite):
             return 1
         else:
             return 2
+
+    def etalonnage(self, valeur_limite = -1):
+        if valeur_limite == -1:
+            #Etalonage auto
+            pass
+        else:
+            self._valeur_limite = valeur_limite
     
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur

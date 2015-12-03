@@ -12,11 +12,11 @@ A = Moteur('A')
 B = Moteur('B')
 C = Moteur('C', -80)
 A.runMS(15000, -50)
-print("Moteur A" + str(A.isRuning()) + "Moteur B" + str(B.isRuning()) + "Moteur C" + str(C.isRuning()))
+print("Moteur A : " + str(A.isRuning()) + "Moteur B : " + str(B.isRuning()) + "Moteur C : " + str(C.isRuning()))
 
 print("Initialisation du moteur B...")
 B.runMS(5000, 50)
-print("Moteur A" + str(A.isRuning()) + "Moteur B" + str(B.isRuning()) + "Moteur C" + str(C.isRuning()))
+print("Moteur A : " + str(A.isRuning()) + "Moteur B : " + str(B.isRuning()) + "Moteur C : " + str(C.isRuning()))
 
 print("Initialisation du moteur C...")
 C.setConsigne(-50)
