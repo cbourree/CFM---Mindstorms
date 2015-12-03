@@ -63,6 +63,8 @@ class Moteur():
         if port == 'A':
             pinA = 33
             pinB = 35
+            self._pinTacho1 = 7
+            self._pinTAcho2 = 11
         elif port == 'B':
             pinA = 37
             pinB = 40
@@ -73,6 +75,8 @@ class Moteur():
         GPIO.setup(pinB, GPIO.OUT)
         self._pwm1 = GPIO.PWM(pinA, 1000)
         self._pwm2 = GPIO.PWM(pinB, 1000)
+        GPIO.setup(self._pinTacho1, GPIO.IN)
+        GPIO.setup(self._pinTacho2, GPIO.IN)
         return self
 
     def getPort(self):
@@ -146,7 +150,15 @@ class Moteur():
         self._pwm2.stop()
         self._isRuning = False
 
-    
+    def getVitesse(self):
+        GPIO.wait_for_edge(self._pinTacho1, GPIO.RISING)
+        t0 = time.clock()
+        GPIO.wait_for_edge(self._pinTacho1, GPIO.RISING)
+        t1 = time.clock()
+        temps = t1 - t0
+        print("Temps : ", temps)
+        
+        
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur
         return "Moteur sur le port {}\n\tConsigne : {}" . format(self._port, self._consigne)
