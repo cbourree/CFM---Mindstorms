@@ -8,7 +8,7 @@ import time
 class CapteurPortErreur(Exception):
     #Le port demandé n'existe pas
     pass
-    
+
 class TouchCapteur():
 
     _PORTS = "1234" #Liste des ports disponibles
@@ -35,6 +35,7 @@ class TouchCapteur():
         self._port = port
 
     def isPressed(self):
+        #Return True si le bouton du capteur est pressé, False sinon
         tension = getTension(self._voie_can)
         if tension < 2:
             return True
@@ -42,6 +43,7 @@ class TouchCapteur():
             return False
 
     def waitIsPressed(self):
+        #Met en pause le programme jusqu'à que le capteur soit pressé
         while (self.isPressed() != 1):
             time.sleep(0.1)
     

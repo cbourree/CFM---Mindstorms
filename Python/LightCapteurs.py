@@ -18,10 +18,10 @@ class LightCapteur():
             raise CapteurPortErreur
         self._port = port
         if port == '1':
-            self._voie_can = 0
+            self._voie_can = 2
             self._cmd = 12
         else:
-            self._voie_can = 1
+            self._voie_can = 3
             self._cmd = 18
         GPIO.setup(self._cmd, GPIO.OUT)
         self._valeur_limite = 2.6
@@ -54,6 +54,7 @@ class LightCapteur():
             return 2
 
     def etalonnage(self, valeur_limite = -1):
+        #Pour changer la valeur limite entre "Blanc" et "Noir"
         if valeur_limite == -1:
             #Etalonage auto
             pass

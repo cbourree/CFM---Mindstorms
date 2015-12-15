@@ -21,14 +21,16 @@ class MoteurTempsErreur(Exception):
     #Le temps n'est pas possible
     pass
 
-class ThreadGo(Thread): #Go non bloquant
-
+class ThreadGo(Thread):
+#Run non bloquant
+    
     def __init__(self, mo, tempsMS):
         Thread.__init__(self)
         self._mo = mo 
         self._tempsMS = tempsMS
 
     def run(self):
+        #Appellé pour lancer le moteur sans arrêt tempo
         self._mo._isRuning = True
         if self._mo.getConsigne() > 0:
             self._mo._pwm1.start(100) #100, état haut
@@ -49,11 +51,12 @@ class Moteur():
     _PORTS = "ABC" #Liste des ports disponibles
     
     def __new__(cls, port, consigne = 0):
+        #Initialisation du nouveau moteur
         if port in cls._MOTEURS: #Si le port est déjà pris
             raise MoteurExistErreur
-        if port not in Moteur._PORTS:
+        if port not in Moteur._PORTS: #Si le port est dispo
             raise MoteurPortErreur
-        if consigne < -100 or consigne > 100:
+        if consigne < -100 or consigne > 100: #Si la vitesse est comprise dans [-100;100]
             raise MoteurConsigneError
         self = object.__new__(cls)
         self._port = port
@@ -71,24 +74,28 @@ class Moteur():
         else:
             pinA = 38
             pinB = 36
-        GPIO.setup(pinA, GPIO.OUT)
+        GPIO.setup(pinA, GPIO.OUT) #On initialise les pins en sortie
         GPIO.setup(pinB, GPIO.OUT)
-        self._pwm1 = GPIO.PWM(pinA, 1000)
+        self._pwm1 = GPIO.PWM(pinA, 1000) #On les mets en tant que sortie PWMs
         self._pwm2 = GPIO.PWM(pinB, 1000)
-        GPIO.setup(self._pinTacho1, GPIO.IN)
+        GPIO.setup(self._pinTacho1, GPIO.IN) #On initialise les entrée pour récupéré signal tacho
         GPIO.setup(self._pinTacho2, GPIO.IN)
         return self
 
     def getPort(self):
+        #Return le port du moteur
         return self._port
     
     def getConsigne(self):
+        #Return la consigne, comprise entre -100 et 100
         return self._consigne
 
     def isRuning(self):
+        #Return True si le moteur est en marche, False sinon
         return self._isRuning
 
     def setPort(self, port):
+        #Change le port du moteur
         if port in self._MOTEURS:
             raise MoteurExistErreur
         if port not in Moteur._PORTS:
@@ -98,6 +105,7 @@ class Moteur():
         self._MOTEURS[port] = self
         
     def setConsigne(self, consigne):
+        #Change la consigne du moteur
         if consigne < -100 or consigne > 100:
             raise MoteurConsigneErreur
         self._consigne = consigne
@@ -113,7 +121,7 @@ class Moteur():
                 self._pwm2.ChangeDutyCycle(100)
 
     def runMS(self, tempsMS, consigne = 'A'):
-        #le temps en ms
+        #Lance les moteurs pour un certain temps tempsMS,temps en ms, et une certaine consigne consigne
         if consigne != 'A':
             self.setConsigne(consigne)
         try:
@@ -126,6 +134,7 @@ class Moteur():
         thread.start()
 
     def runInfini(self, consigne):
+        #Lance le moteur avec une certaine consigne consigne, doit être arrêté avec stop()
         if consigne != 'A':
             self.setConsigne(consigne)
         self._isRuning = True
@@ -142,15 +151,18 @@ class Moteur():
         
 
     def waitStop(self):
+        #Attend que le moteur s'arrête
         while self.isRuning():
             time.sleep(0.001)
     
     def stop(self):
+        #Arrête les moteurs
         self._pwm1.stop()
         self._pwm2.stop()
         self._isRuning = False
 
     def getVitesse(self):
+        #Return la vitesse mesuré des moteurs
         GPIO.wait_for_edge(self._pinTacho1, GPIO.RISING)
         t0 = time.clock()
         GPIO.wait_for_edge(self._pinTacho1, GPIO.RISING)

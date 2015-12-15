@@ -18,11 +18,11 @@ class SoundCapteur():
             raise CapteurPortErreur
         self._port = port
         if port == '1':
-            self._voie_can = 0
+            self._voie_can = 2
             self._digi1 = 12
             self._digi2 = 16
         else:
-            self._voie_can = 1
+            self._voie_can = 3
             self._digi1 = 18
             self._digi2 = 22
         GPIO.setup(self._digi1, GPIO.OUT)
