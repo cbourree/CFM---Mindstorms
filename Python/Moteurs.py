@@ -78,8 +78,8 @@ class Moteur():
         GPIO.setup(pinB, GPIO.OUT)
         self._pwm1 = GPIO.PWM(pinA, 1000) #On les mets en tant que sortie PWMs
         self._pwm2 = GPIO.PWM(pinB, 1000)
-        GPIO.setup(self._pinTacho1, GPIO.IN) #On initialise les entrée pour récupéré signal tacho
-        GPIO.setup(self._pinTacho2, GPIO.IN)
+        #GPIO.setup(self._pinTacho1, GPIO.IN) #On initialise les entrée pour récupéré signal tacho
+        #GPIO.setup(self._pinTacho2, GPIO.IN)
         return self
 
     def getPort(self):

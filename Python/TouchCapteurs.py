@@ -18,13 +18,13 @@ class TouchCapteur():
             raise CapteurPortErreur
         self._port = port
         if port == '1':
-            self._voie_can = 0
-        elif port == '2':
-            self._voie_can = 1
-        elif port == '3':
             self._voie_can = 2
-        else:
+        elif port == '2':
             self._voie_can = 3
+        elif port == '3':
+            self._voie_can = 0
+        else:
+            self._voie_can = 1
 
     def getPort(self):
         return self._port
@@ -37,7 +37,7 @@ class TouchCapteur():
     def isPressed(self):
         #Return True si le bouton du capteur est pressé, False sinon
         tension = getTension(self._voie_can)
-        if tension < 2:
+        if tension > 2:
             return True
         else:
             return False
