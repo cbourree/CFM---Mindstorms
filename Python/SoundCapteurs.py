@@ -43,7 +43,7 @@ class SoundCapteur():
         tension = getTension(self._voie_can)
         GPIO.output(self._digi1, GPIO.LOW)
         GPIO.output(self._digi2, GPIO.LOW)
-        return (5 - tension) * 20
+        return tension * 20
     
     def __repr__(self):
         #Quand on entre notre objet dans l'interpréteur

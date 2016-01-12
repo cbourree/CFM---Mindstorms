@@ -48,7 +48,7 @@ class LightCapteur():
         time.sleep(0.2)
         tension = getTension(self._voie_can)
         GPIO.output(self._cmd, GPIO.LOW)
-        if (tension < self._valeur_limite):
+        if (tension > self._valeur_limite):
             return 1
         else:
             return 2

@@ -8,12 +8,12 @@ import time
 GPIO.setmode(GPIO.BOARD)
 
 
-#UC = UltrasonicCapteur('3')
+UC = UltrasonicCapteur('3')
 
-#while 1:
-#    print("\nDistance :")
-#    print(UC.getDistance())
-#    time.sleep(1)
+while 1:
+    print("\nDistance :")
+    print(UC.getDistance())
+    time.sleep(1)
 
 GPIO.cleanup()
 
